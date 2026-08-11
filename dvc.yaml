@@ -1,0 +1,29 @@
+stages:
+  train:
+    cmd: python main.py
+    deps:
+      - main.py
+      - src
+      - configs/config.yaml
+      - raw_data
+    outs:
+      - outputs/models
+      - outputs/plots
+      - outputs/logs
+
+  evaluate:
+    cmd: python -m src.evaluation
+    deps:
+      - src
+      - configs/config.yaml
+      - raw_data
+    outs:
+      - outputs/plots/confusion_matrix.png
+      - outputs/plots/roc_curves.png
+
+  version_data:
+    cmd: python -m src.versioning
+    deps:
+      - src/versioning.py
+      - configs/config.yaml
+      - processed_data

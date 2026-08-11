@@ -1,0 +1,56 @@
+experiment:
+  name: "melanoma_cnn_v1"
+  data_version: "v1"
+  seed: 42
+
+paths:
+  raw_data: "raw_data"
+  processed_data: "processed_data"
+  evaluation_data: "evaluation_data"
+  train_dir: "raw_data/training_set"
+  test_dir: "raw_data/test_set"
+  single_image: "raw_data/cas.jpg"
+  output_dir: "outputs"
+  model_save_path: "outputs/models"
+  plots_dir: "outputs/plots"
+  logs_dir: "outputs/logs"
+
+data:
+  target_size: [124, 124]
+  batch_size: 16
+  validation_split: 0.2
+  augmentation:
+    rescale: 1.0
+    shear_range: 0.2
+    zoom_range: 0.2
+    horizontal_flip: true
+    rotation_range: 20
+    brightness_range: [0.8, 1.2]
+    vertical_flip: false
+
+training:
+  epochs: 50
+  learning_rate: 0.001
+  optimizer: "adam"
+  loss: "categorical_crossentropy"
+  early_stopping:
+    enabled: true
+    patience: 10
+    monitor: "val_loss"
+  lr_scheduler:
+    enabled: true
+    factor: 0.5
+    patience: 5
+    min_lr: 0.0000001
+  model_checkpoint:
+    enabled: true
+    save_best_only: true
+    monitor: "val_accuracy"
+
+model:
+  architecture: "custom_cnn"
+  input_shape: [124, 124, 3]
+  use_transfer_learning: false
+  transfer_learning_model: "EfficientNetB0"
+  dropout_rate: 0.3
+  dense_units: 128
